@@ -1,11 +1,13 @@
-FROM node:16-alpine AS builder
+# Etapa de build
+FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package.json ./
-RUN npm install
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
 
-FROM node:16-alpine AS runner
+# Etapa de execução
+FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV production
 COPY --from=builder /app ./
